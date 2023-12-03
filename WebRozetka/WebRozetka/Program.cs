@@ -1,9 +1,13 @@
 
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using WebRozetka.Data;
 using WebRozetka.Mapper;
+using WebRozetka.Models.Category;
+using WebRozetka.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
+
+//builder.Services.AddScoped<IValidator<CategoryCreateViewModel>,ValidatorCategoryCreate>();
+//builder.Services.AddValidatorsFromAssemblies
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 
