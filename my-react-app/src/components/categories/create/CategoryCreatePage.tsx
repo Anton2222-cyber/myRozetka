@@ -1,12 +1,12 @@
-import { useState } from "react";
+import {useState} from "react";
 
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, Input, message, Modal, Row, Upload } from 'antd';
+import {Button, Divider, Form, Input, message, Modal, Row, Upload} from 'antd';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import TextArea from "antd/es/input/TextArea";
-import { ICategoryCreate, ICategoryItem } from "../../../interfaces/categories";
-import http_common from "../../../http_common";
+import {ICategoryCreate, ICategoryCreateForm, ICategoryItem} from "../../../interfaces/categories";
+import http_common from "../../../http_common.ts";
 
 
 const CategoryCreatePage: React.FC = () => {
@@ -14,7 +14,7 @@ const CategoryCreatePage: React.FC = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [file, setFile] = useState<UploadFile | null>();
-  const [form] = Form.useForm<ICategoryCreate>();
+  const [form] = Form.useForm<ICategoryCreateForm>();
 
   const [messageApi, contextHolder] = message.useMessage();
   const handleCancel = () => setPreviewOpen(false);
@@ -28,37 +28,32 @@ const CategoryCreatePage: React.FC = () => {
     setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
   };
 
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFile }) => {
+  const handleChange: UploadProps['onChange'] = ({fileList: newFile}) => {
     const newFileList = newFile.slice(-1);
     setFile(newFileList[0]);
   };
   const onReset = () => {
     onClear();
   };
-  const onFinish = async (values: any) => {
-
-    if (values.image) {
-      values.image = values.image.file
-    }
+  const onFinish = async (values: ICategoryCreateForm) => {
+    const data : ICategoryCreate = {...values, image : values.image?.originFileObj}
     try {
       const result =
-          await http_common.post<ICategoryItem>("/api/categories", values,
+          await http_common.post<ICategoryItem>("/api/categories", data,
               {
-                  headers: {
-                      "Content-Type":"multipart/form-data"
-                  }
+                headers: {
+                  "Content-Type":"multipart/form-data"
+                }
               });
       console.log("Create new category", result);
       success();
       onClear();
-  }
-  catch {
+    }
+    catch {
       error();
-  }
-
- 
+    }
   };
-  const onClear = () => {
+  const onClear = ()=>{
     form.resetFields();
     setFile(null)
   }
@@ -80,78 +75,78 @@ const CategoryCreatePage: React.FC = () => {
   };
 
   return (
-    <Row gutter={16}>
-      {contextHolder}
-      <Divider orientation="left">CТВОРИТИ КАТЕГОРІЮ</Divider>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        layout="vertical"
-        style={{ minWidth: '100%', display: 'flex', flexDirection: "column", justifyContent: "center", padding: 20 }}
-      >
-        <Form.Item
-          label="Назва"
-          name="name"
-          htmlFor="name"
-          rules={[
-            { required: true, message: 'Це поле є обов\'язковим!' },
-            { min: 3, message: 'Назва повинна містити мінімум 3 символи!' }
-          ]}
+      <Row gutter={16}>
+        {contextHolder}
+        <Divider orientation="left">CТВОРИТИ КАТЕГОРІЮ</Divider>
+        <Form
+            form={form}
+            onFinish={onFinish}
+            layout="vertical"
+            style={{minWidth: '100%', display: 'flex', flexDirection: "column", justifyContent: "center", padding:20}}
         >
-          <Input autoComplete="name" />
-        </Form.Item>
-
-        <Form.Item
-          label="Опис"
-          name="description"
-          htmlFor="description"
-          rules={[
-            { required: true, message: 'Це поле є обов\'язковим!' },
-            { min: 10, message: 'Опис повинен містити мінімум 10 символів!' }
-          ]}
-        >
-          <TextArea />
-        </Form.Item>
-
-        <Form.Item
-          label="Фото"
-          name={"image"}
-        >
-          <Upload
-            beforeUpload={() => false}
-            maxCount={1}
-            listType="picture-card"
-            onChange={handleChange}
-            onPreview={handlePreview}
-            fileList={file ? [file] : []}
-            accept="image/*"
+          <Form.Item
+              label="Назва"
+              name="name"
+              htmlFor="name"
+              rules={[
+                {required: true, message: 'Це поле є обов\'язковим!'},
+                {min: 3, message: 'Назва повинна містити мінімум 3 символи!'}
+              ]}
           >
-            {file ? null :
-              (
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </div>)
-            }
-          </Upload>
-        </Form.Item>
+            <Input autoComplete="name"/>
+          </Form.Item>
+
+          <Form.Item
+              label="Опис"
+              name="description"
+              htmlFor="description"
+              rules={[
+                {required: true, message: 'Це поле є обов\'язковим!'},
+                {min: 10, message: 'Опис повинен містити мінімум 10 символів!'}
+              ]}
+          >
+            <TextArea/>
+          </Form.Item>
+
+          <Form.Item
+              label="Фото"
+              name={"image"}
+          >
+            <Upload
+                beforeUpload={() => false}
+                maxCount={1}
+                listType="picture-card"
+                onChange={handleChange}
+                onPreview={handlePreview}
+                fileList={file ? [file] : []}
+                accept="image/*"
+            >
+              {file ? null :
+                  (
+                      <div>
+                        <PlusOutlined/>
+                        <div style={{marginTop: 8}}>Upload</div>
+                      </div>)
+              }
+            </Upload>
+          </Form.Item>
 
 
-        <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-          <img alt="example" style={{ width: '100%' }} src={previewImage} />
-        </Modal>
+          <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+            <img alt="example" style={{width: '100%'}} src={previewImage}/>
+          </Modal>
 
-        <Row style={{ display: 'flex', justifyContent: 'center' }}>
-          <Button style={{ margin: 10 }} type="primary" htmlType="submit">
-            Submit
-          </Button>
-          <Button style={{ margin: 10 }} htmlType="button" onClick={onReset}>
-            Reset
-          </Button>
-        </Row>
-      </Form>
-    </Row>
+          <Row style={{display: 'flex', justifyContent: 'center'}}>
+            <Button style={{margin:10}} type="primary" htmlType="submit">
+              Submit
+            </Button>
+            <Button  style={{margin:10}}  htmlType="button" onClick={onReset}>
+              Reset
+            </Button>
+          </Row>
+        </Form>
+      </Row>
   )
 }
 
-export default CategoryCreatePage;
+export default  CategoryCreatePage;
