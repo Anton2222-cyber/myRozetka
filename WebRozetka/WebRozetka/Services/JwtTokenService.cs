@@ -19,7 +19,8 @@ namespace WebRozetka.Services
             var claims = new List<Claim>
         {
             new Claim("email", user.Email),
-            new Claim("name", $"{user.LastName} {user.FirstName}")
+            new Claim("name", $"{user.LastName} {user.FirstName}"),
+            new Claim("image", user.Image)
         };
             var key = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JwtSecretKey"));
             var signinKey = new SymmetricSecurityKey(key);

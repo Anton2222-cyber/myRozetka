@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 
 import {PlusOutlined} from '@ant-design/icons';
 import {Button, Form, Input, message, Modal, Row, Upload} from 'antd';
@@ -9,9 +9,11 @@ import {IRegisterForm, IRegister, ILoginResult, IUserLoginInfo} from "../../../i
 import {jwtDecode} from "jwt-decode";
 import {imageConverter} from "../../../interfaces/forms";
 import {useNavigate} from "react-router-dom";
+import {TokenContext} from "../../../context/TokenContext.tsx";
 
 
 const RegisterPage = () => {
+    const tokenContext = useContext(TokenContext);
     const navigator = useNavigate()
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -49,7 +51,7 @@ const RegisterPage = () => {
             const {token} = result.data;
             const user: IUserLoginInfo = jwtDecode<IUserLoginInfo>(token);
             console.log("User info", user);
-            localStorage.token = token;
+            tokenContext.setToken(token);
             //if(localStorage.token)
             success();
             onClear();

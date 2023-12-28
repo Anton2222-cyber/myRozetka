@@ -1,10 +1,12 @@
 import {Button, Card, Col, Popconfirm, Row} from "antd";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {ICategoryItem} from "../../../interfaces/categories";
 import http_common from "../../../http_common.ts";
 import {APP_ENV} from "../../../env";
 import {Link, useNavigate} from "react-router-dom";
 import { EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import {TokenContext} from "../../../context/TokenContext.tsx";
+
 
 
 const CategoryListPage = () => {
@@ -71,14 +73,17 @@ const CategoryListPage = () => {
             </div>
         </Col>
     ));
+    const tokenContext = useContext(TokenContext);
+
     return (
         <>
             <h1>Список категорій</h1>
-            <Link to={"/create"}>
+            {tokenContext.token?<Link to={"/create"}>
                 <Button type="primary">
                     Додати
                 </Button>
-            </Link>
+            </Link>:null}
+
             <Row gutter={16}>
                 {content}
             </Row>

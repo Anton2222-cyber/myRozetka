@@ -8,6 +8,11 @@ export interface IRegisterForm {
     password: string;
 }
 
+export interface ILoginForm {
+    email: string;
+    password: string;
+}
+
 export interface IRegister {
     firstName: string;
     lastName: string;
@@ -22,5 +27,6 @@ export  interface  ILoginResult{
 
 export  interface IUserLoginInfo{
     name: string,
-    email: string
+    email: string,
+    image: string
 }
