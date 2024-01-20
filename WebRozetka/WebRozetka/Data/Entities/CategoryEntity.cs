@@ -12,5 +12,6 @@ namespace WebRozetka.Data.Entities
         public string Image { get; set; }
         [StringLength(4000)]
         public string Description { get; set; }
+        public virtual ICollection<ProductEntity> Products { get;}
     }
 }
