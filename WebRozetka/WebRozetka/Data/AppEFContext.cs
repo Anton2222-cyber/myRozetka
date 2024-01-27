@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebRozetka.Data.Entities;
 using WebRozetka.Data.Entities.Identity;
+using WebRozetka.Data.Entities.Orders;
 
 namespace WebRozetka.Data
 {
@@ -17,6 +18,16 @@ namespace WebRozetka.Data
 
         public DbSet<ProductEntity> Products { get; set; }
         public DbSet<ProductImageEntity> ProductImages { get; set; }
+
+        public DbSet<BasketEntity> Baskets { get; set; }
+
+        public DbSet<OrderStatusEntity> OrderStatuses { get; set; }
+
+        public DbSet<OrderEntity> Orders { get; set; }
+
+        public DbSet<OrderItemEntity> OrdersItems { get; set; }
+
+        public DbSet<OrderContactInfoEntity> OrderContactInfos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -34,6 +45,11 @@ namespace WebRozetka.Data
                     .WithMany(r => r.UserRoles)
                     .HasForeignKey(u => u.UserId)
                     .IsRequired();
+            });
+
+            builder.Entity<BasketEntity>(ur =>
+            {
+                ur.HasKey(ur => new { ur.UserId, ur.ProductId });
             });
         }
     }

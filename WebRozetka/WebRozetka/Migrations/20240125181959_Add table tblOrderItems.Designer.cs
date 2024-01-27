@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebRozetka.Data;
@@ -11,9 +12,11 @@ using WebRozetka.Data;
 namespace WebRozetka.Migrations
 {
     [DbContext(typeof(AppEFContext))]
-    partial class AppEFContextModelSnapshot : ModelSnapshot
+    [Migration("20240125181959_Add table tblOrderItems")]
+    partial class AddtabletblOrderItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,29 +293,6 @@ namespace WebRozetka.Migrations
                     b.ToTable("tblBaskets");
                 });
 
-            modelBuilder.Entity("WebRozetka.Data.Entities.Orders.OrderContactInfoEntity", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("text");
-
-                    b.HasKey("OrderId");
-
-                    b.ToTable("tblOrderContantInfos");
-                });
-
             modelBuilder.Entity("WebRozetka.Data.Entities.Orders.OrderEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -546,17 +526,6 @@ namespace WebRozetka.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebRozetka.Data.Entities.Orders.OrderContactInfoEntity", b =>
-                {
-                    b.HasOne("WebRozetka.Data.Entities.Orders.OrderEntity", "Order")
-                        .WithOne("OrderContactInfo")
-                        .HasForeignKey("WebRozetka.Data.Entities.Orders.OrderContactInfoEntity", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("WebRozetka.Data.Entities.Orders.OrderEntity", b =>
                 {
                     b.HasOne("WebRozetka.Data.Entities.Orders.OrderStatusEntity", "OrderStatus")
@@ -638,8 +607,6 @@ namespace WebRozetka.Migrations
 
             modelBuilder.Entity("WebRozetka.Data.Entities.Orders.OrderEntity", b =>
                 {
-                    b.Navigation("OrderContactInfo");
-
                     b.Navigation("OrderItems");
                 });
 
