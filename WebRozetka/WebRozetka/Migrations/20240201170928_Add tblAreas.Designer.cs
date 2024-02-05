@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebRozetka.Data;
@@ -11,9 +12,11 @@ using WebRozetka.Data;
 namespace WebRozetka.Migrations
 {
     [DbContext(typeof(AppEFContext))]
-    partial class AppEFContextModelSnapshot : ModelSnapshot
+    [Migration("20240201170928_Add tblAreas")]
+    partial class AddtblAreas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,65 +138,6 @@ namespace WebRozetka.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tblAreas");
-                });
-
-            modelBuilder.Entity("WebRozetka.Data.Entities.Addres.SettlementEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AreaId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("Ref")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AreaId");
-
-                    b.ToTable("tblSettlements");
-                });
-
-            modelBuilder.Entity("WebRozetka.Data.Entities.Addres.WarehouseEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Ref")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SettlementId");
-
-                    b.ToTable("tblWarehouses");
                 });
 
             modelBuilder.Entity("WebRozetka.Data.Entities.CategoryEntity", b =>
@@ -590,28 +534,6 @@ namespace WebRozetka.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebRozetka.Data.Entities.Addres.SettlementEntity", b =>
-                {
-                    b.HasOne("WebRozetka.Data.Entities.Addres.AreaEntity", "Area")
-                        .WithMany("Settlements")
-                        .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Area");
-                });
-
-            modelBuilder.Entity("WebRozetka.Data.Entities.Addres.WarehouseEntity", b =>
-                {
-                    b.HasOne("WebRozetka.Data.Entities.Addres.SettlementEntity", "Settlement")
-                        .WithMany("Warehouses")
-                        .HasForeignKey("SettlementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Settlement");
-                });
-
             modelBuilder.Entity("WebRozetka.Data.Entities.Identity.UserRoleEntity", b =>
                 {
                     b.HasOne("WebRozetka.Data.Entities.Identity.RoleEntity", "Role")
@@ -719,16 +641,6 @@ namespace WebRozetka.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("WebRozetka.Data.Entities.Addres.AreaEntity", b =>
-                {
-                    b.Navigation("Settlements");
-                });
-
-            modelBuilder.Entity("WebRozetka.Data.Entities.Addres.SettlementEntity", b =>
-                {
-                    b.Navigation("Warehouses");
                 });
 
             modelBuilder.Entity("WebRozetka.Data.Entities.CategoryEntity", b =>

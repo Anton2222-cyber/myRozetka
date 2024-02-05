@@ -1,4 +1,5 @@
 
+using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -36,8 +37,11 @@ builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
     .AddEntityFrameworkStores<AppEFContext>()
     .AddDefaultTokenProviders();
 
+
+
 var singinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<String>("JwtSecretKey")));
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<INovaPoshtaService, NovaPoshtaService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -91,7 +95,11 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors();
 
-builder.Services.AddAutoMapper(typeof(AppMapProfile));
+//builder.Services.AddAutoMapper(typeof(AppMapProfile));
+builder.Services.AddScoped(provider => new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new AppMapProfile(provider.GetService<AppEFContext>()));
+}).CreateMapper());
 
 //builder.Services.AddScoped<IValidator<CategoryCreateViewModel>,ValidatorCategoryCreate>();
 //builder.Services.AddValidatorsFromAssemblies

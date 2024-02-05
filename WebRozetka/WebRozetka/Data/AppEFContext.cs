@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebRozetka.Data.Entities;
 using WebRozetka.Data.Entities.Identity;
 using WebRozetka.Data.Entities.Orders;
+using WebRozetka.Data.Entities.Addres;
 
 namespace WebRozetka.Data
 {
@@ -28,6 +29,12 @@ namespace WebRozetka.Data
         public DbSet<OrderItemEntity> OrdersItems { get; set; }
 
         public DbSet<OrderContactInfoEntity> OrderContactInfos { get; set; }
+
+        public DbSet<AreaEntity> Areas { get; set; }
+
+        public DbSet<SettlementEntity> Settlements { get; set; }
+        public DbSet<WarehouseEntity> Warehouses { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
