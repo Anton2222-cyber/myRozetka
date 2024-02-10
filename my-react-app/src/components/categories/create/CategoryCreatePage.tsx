@@ -7,6 +7,7 @@ import type { UploadFile } from 'antd/es/upload/interface';
 import TextArea from "antd/es/input/TextArea";
 import {ICategoryCreate, ICategoryCreateForm, ICategoryItem} from "../../../interfaces/categories";
 import http_common from "../../../http_common.ts";
+import {useNavigate} from "react-router-dom";
 
 
 const CategoryCreatePage: React.FC = () => {
@@ -15,6 +16,7 @@ const CategoryCreatePage: React.FC = () => {
   const [previewTitle, setPreviewTitle] = useState('');
   const [file, setFile] = useState<UploadFile | null>();
   const [form] = Form.useForm<ICategoryCreateForm>();
+const  navigate = useNavigate()
 
   const [messageApi, contextHolder] = message.useMessage();
   const handleCancel = () => setPreviewOpen(false);
@@ -36,7 +38,7 @@ const CategoryCreatePage: React.FC = () => {
     onClear();
   };
   const onFinish = async (values: ICategoryCreateForm) => {
-    const data : ICategoryCreate = {...values, image : values.image?.originFileObj}
+    const data : ICategoryCreate = {...values, image : values.image?.file}
     try {
       const result =
           await http_common.post<ICategoryItem>("/api/categories", data,
@@ -48,6 +50,7 @@ const CategoryCreatePage: React.FC = () => {
       console.log("Create new category", result);
       success();
       onClear();
+      navigate("/");
     }
     catch {
       error();

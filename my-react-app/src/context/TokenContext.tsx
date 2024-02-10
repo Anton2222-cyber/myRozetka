@@ -1,5 +1,5 @@
-import axios from "axios";
 import { createContext } from "react";
+import http_common from "../http_common.ts";
 
 export type TokenContextType = {
   token: string,
@@ -21,11 +21,11 @@ export const createContextValueByState = (tokenState: [string, React.Dispatch<Re
     setToken(newToken: string) {
       setToken(newToken);
       if (newToken) {
-        axios.defaults.headers.common["Authorization"] = "Bearer " + newToken;
+        http_common.defaults.headers.common["Authorization"] = "Bearer " + newToken;
         localStorage.setItem('token', newToken);
       }
       else {
-        delete axios.defaults.headers.common["Authorization"];
+        delete http_common.defaults.headers.common["Authorization"];
         localStorage.removeItem('token');
       }
     }
