@@ -30,7 +30,12 @@ const ContainerDefault: React.FC = () => {
         {
             key: '2',
             icon: <HomeOutlined />,
-            label: <Link to="/">Головна</Link>,
+            label: <Link to="/">Категорії</Link>,
+        },
+        {
+            key: '7',
+            icon: <HomeOutlined />,
+            label: <Link to="/products">Продукти</Link>,
         }
 
     ];

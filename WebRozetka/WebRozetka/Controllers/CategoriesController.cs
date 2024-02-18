@@ -7,6 +7,7 @@ using WebRozetka.Data;
 using WebRozetka.Data.Entities;
 using WebRozetka.Helpers;
 using WebRozetka.Models.Category;
+using WebRozetka.Models.Helpers;
 
 namespace WebRozetka.Controllers
 {
@@ -47,6 +48,7 @@ namespace WebRozetka.Controllers
             await _appEFContext.SaveChangesAsync();
             return Ok();
         }
+
         [HttpPut]
         public async Task<IActionResult> Edit([FromForm] CategoryEditViewModel model)
         {
@@ -97,6 +99,23 @@ namespace WebRozetka.Controllers
                 return NotFound();
             }
             return Ok(_mapper.Map<CategoryItemViewModel>(cat));
+        }
+
+        [HttpGet("names")]
+        public async Task<IActionResult> GetCategoriesNames()
+        {
+            try
+            {
+                var result = await _appEFContext.Categories
+                    .Where(x => !x.IsDeleted)
+                    .Select(x => _mapper.Map<SelectItemViewModel>(x)).ToListAsync();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Помилка сервера: " + ex.Message);
+            }
         }
 
     }

@@ -8,6 +8,8 @@ import RegisterPage from "./components/auth/register/RegisterPage.tsx";
 import {createContextValueByState, TokenContext} from "./context/TokenContext.tsx";
 import LoginPage from "./components/auth/login/LoginPage.tsx";
 import http_common from "./http_common.ts";
+import ProductListPage from "./components/products/list/ProductListPage.tsx";
+import ProductCreatePage from "./components/products/create/ProductCreatePage.tsx";
 
 const App: React.FC = () => {
     const tokenState = useState<string>(localStorage.getItem('token') ?? '');
@@ -24,6 +26,10 @@ const App: React.FC = () => {
                     <Route path="edit/:id" element={<CategoryEditPage/>}/>
                     <Route path={"register"} element={<RegisterPage/>}/>
                     <Route path={"login"} element={<LoginPage/>}/>
+                    <Route path={"products"}>
+                        <Route index element={<ProductListPage/>}/>
+                        <Route path={"create"} element={<ProductCreatePage/>}/>
+                    </Route>
                 </Route>
             </Routes>
                 </TokenContext.Provider >
