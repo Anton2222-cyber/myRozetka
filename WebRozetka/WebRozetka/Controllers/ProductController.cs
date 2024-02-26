@@ -25,16 +25,47 @@ namespace WebRozetka.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous] //до списку може звернутись не авторизованиним юзерам
-        public async Task<IActionResult> List()
+        [AllowAnonymous] //До списку продутів дати доступ не авторизованим корисувачам
+        public async Task<IActionResult> List([FromQuery] ProductSearchViewModel search)
         {
-            var model = await _appEFContext.Products
+            var query = _appEFContext.Products
                 .Include(x => x.Category)
                 .Include(x => x.ProductImages)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search.Name))
+                query = query.Where(x => x.Name.ToLower().Contains(search.Name.ToLower()));
+
+            if (!string.IsNullOrEmpty(search.Description))
+                query = query.Where(x => x.Description.ToLower().Contains(search.Description.ToLower()));
+
+            if (search.CategoryId > 0)
+                query = query.Where(x => x.CategoryId == search.CategoryId);
+
+            query = query.OrderBy(x => x.Id);
+
+            int page = search.Page ?? 1;
+            int pageSize = search.PageSize ?? 5;
+            int count = query.Count();
+
+            query = query
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize);
+
+            var list = await query
                 .Select(x => _mapper.Map<ProductItemViewModel>(x))
                 .ToListAsync();
 
-            return Ok(model);
+            ProductResultViewModel result = new ProductResultViewModel
+            {
+                TotalCount = count,
+                List = list,
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                PageIndex = page,
+                PageSize = pageSize
+            };
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -111,6 +142,7 @@ namespace WebRozetka.Controllers
                 return StatusCode(500, "Сталася помилка при створенні продукту: " + ex.Message);
             }
         }
+
 
 
     }
