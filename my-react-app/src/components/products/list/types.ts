@@ -5,6 +5,7 @@ export interface IProductItem {
     description: string,
     quantity: number,
     images: string[],
+    categoryName: string,
     categoryId: number,
 }
 
@@ -13,7 +14,7 @@ export interface IProductData {
     pageIndex: number,
     pageSize: number,
     totalCount: number,
-    totalPages: number
+    //totalPages: number
 }
 
 export interface IProductSearch{
